@@ -1,0 +1,6 @@
+duckdb
+pandas
+python-evtx
+scapy
+jinja2
+streamlit
