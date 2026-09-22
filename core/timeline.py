@@ -17,6 +17,9 @@ def create_timeline_db(db_path="data/working/timeline.duckdb"):
         )
     """)
 
+    # clear old data so re-running this script doesn't create duplicates
+    con.execute("DELETE FROM events")
+
     return con
 
 
@@ -40,6 +43,7 @@ if __name__ == "__main__":
 
     sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
     from parsers.evtx_parser import parse_evtx
+    from core.mitre import enrich_event
 
     con = create_timeline_db()
 
@@ -53,4 +57,8 @@ if __name__ == "__main__":
 
     print("\ntimeline (sorted by time):")
     for row in get_timeline(con):
-        print(row)
+        timestamp, host, event_id, channel, source = row
+        enriched = enrich_event({"event_id": event_id})
+        print(f"{timestamp} | {host} | {event_id} - {enriched['description']}")
+        if enriched["mitre_technique"]:
+            print(f"    -> MITRE: {enriched['mitre_technique']} ({enriched['mitre_name']})")
