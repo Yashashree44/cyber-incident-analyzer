@@ -1,6 +1,6 @@
 duckdb
 pandas
-python-evtx
+evtx==0.8.1
 scapy
 jinja2
 streamlit
