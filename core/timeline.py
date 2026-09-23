@@ -17,10 +17,12 @@ def create_timeline_db(db_path="data/working/timeline.duckdb"):
         )
     """)
 
-    # clear old data so re-running this script doesn't create duplicates
-    con.execute("DELETE FROM events")
-
     return con
+
+
+def reset_timeline(con):
+    """Clears existing events before a fresh load. Call this only when re-loading evidence."""
+    con.execute("DELETE FROM events")
 
 
 def add_events(con, events):
@@ -46,6 +48,7 @@ if __name__ == "__main__":
     from core.mitre import enrich_event
 
     con = create_timeline_db()
+    reset_timeline(con)
 
     evidence_folder = "data/evidence"
     for filename in os.listdir(evidence_folder):
