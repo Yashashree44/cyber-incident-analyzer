@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Incident Investigation Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            color: #222;
+        }
+        h1 {
+            border-bottom: 3px solid #444;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 40px;
+            color: #333;
+        }
+        .summary-box {
+            background: #f4f4f4;
+            padding: 15px;
+            border-left: 4px solid #666;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background: #333;
+            color: white;
+        }
+        .finding {
+            background: #fff3f3;
+            border-left: 4px solid #c0392b;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .severity-high {
+            color: #c0392b;
+            font-weight: bold;
+        }
+        .no-findings {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cyber Incident Investigation Report</h1>
+
+    <div class="summary-box">
+        <strong>Generated on:</strong> {{ generated_at }}<br>
+        <strong>Total events analyzed:</strong> {{ total_events }}<br>
+        <strong>Evidence files:</strong> {{ evidence_files|join(", ") }}
+    </div>
+
+    <h2>Key Findings</h2>
+
+    {% if findings %}
+        {% for f in findings %}
+        <div class="finding">
+            <span class="severity-high">[{{ f.severity }}]</span>
+            {{ f.description }}
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-findings">No suspicious patterns detected.</p>
+    {% endif %}
+
+    <h2>Full Timeline</h2>
+
+    <table>
+        <tr>
+            <th>Timestamp</th>
+            <th>Host</th>
+            <th>Event ID</th>
+            <th>Description</th>
+            <th>MITRE Technique</th>
+        </tr>
+        {% for e in timeline %}
+        <tr>
+            <td>{{ e.timestamp }}</td>
+            <td>{{ e.host }}</td>
+            <td>{{ e.event_id }}</td>
+            <td>{{ e.description }}</td>
+            <td>{{ e.mitre_technique or "-" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
